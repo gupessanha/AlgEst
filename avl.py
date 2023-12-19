@@ -31,6 +31,12 @@ class BinarySearchTree:
             return self.search(data, node.right)
         else:
             return node
+     
+    def height(self, node):
+        if node is None:
+            return -1
+        else:
+            return max(self.height(node.left), self.height(node.right)) + 1
         
     def findMin(self, node):
         if node is None:
@@ -87,4 +93,31 @@ class BinarySearchTree:
                     node = self.RightLeftRotation(node)
         else:
             print("Valor já existe na árvore")
+        return node
+    
+    def remove(self, data, node):
+        if node is None:
+            print("Valor não encontrado")
+        elif data < node.data:
+            node.left = self.remove(data, node.left)
+            if (self.height(node.right) - self.height(node.left)) == 2:
+                if node.right.right is None:
+                    node = self.RightLeftRotation(node)
+                else:
+                    node = self.LeftRotation(node)
+        elif data > node.data:
+            node.right = self.remove(data, node.right)
+            if (self.height(node.left) - self.height(node.right)) == 2:
+                if node.left.left is None:
+                    node = self.LeftRightRotation(node)
+                else:
+                    node = self.RightRotation(node)
+        elif node.left is not None and node.right is not None:
+            node.data = self.findMin(node.right).data
+            node.right = self.remove(node.data, node.right)
+        else:
+            if node.left is not None:
+                node = node.left
+            else:
+                node = node.right
         return node
